@@ -21,4 +21,4 @@ class GetPlayerCardsUseCase:
         if not player:
             raise ValueError(f"Jogador com ID {player_id} não encontrado no jogo")
         
-        return player.hand
+        return player.hand.cards

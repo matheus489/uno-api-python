@@ -179,3 +179,24 @@ def puxar_carta(
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao puxar carta: {str(e)}")
+
+@router.get("/jogo/carta_do_topo", response_model=CardResponse)
+def ver_carta_do_topo(id_jogo: int = Query(..., description="ID do jogo")):
+    """
+    Retorna a carta do topo da pilha de descarte.
+    
+    Args:
+        id_jogo: ID do jogo
+        
+    Returns:
+        Carta do topo da pilha de descarte
+    """
+    try:
+        use_case = container.get_top_card_use_case()
+        top_card = use_case.execute(id_jogo)
+        
+        return CardResponse.from_card(top_card)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao buscar carta do topo: {str(e)}")

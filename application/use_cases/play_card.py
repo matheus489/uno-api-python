@@ -42,11 +42,11 @@ class PlayCardUseCase:
             raise ValueError(f"Jogador com ID {player_id} não encontrado")
         
         # Verificar se o índice é válido
-        if card_index < 0 or card_index >= len(player.hand):
+        if card_index < 0 or card_index >= len(player.hand.cards):
             raise ValueError(f"Índice de carta inválido: {card_index}")
         
         card_to_play = player.hand.get_card(card_index)
-        top_card = game.get_top_card()
+        top_card = self.card_facade.get_top_card(game.discard_pile)
         
         # Verificar se a carta pode ser jogada
         if not self.card_facade.validate_move(card_to_play, top_card):

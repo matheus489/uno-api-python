@@ -35,7 +35,7 @@ class Game:
         if not self.is_finished:
             self.current_player = (self.current_player + 1) % len(self.players)
     
-    def get_top_card(self) -> Optional[Card]:
+    def get_top_card(self) -> Card:
         """Retorna a carta do topo da pilha"""
         if self.pile:
             return self.pile[-1]

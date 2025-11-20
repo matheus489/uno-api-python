@@ -21,3 +21,6 @@ class Hand:
         if 0 <= card_index < len(self.cards):
             return self.cards[card_index]
         raise IndexError("Card index out of range")
+    
+    def add_cards(self, cards: List[Card]):
+        self.cards.extend(cards)

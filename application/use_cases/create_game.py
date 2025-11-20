@@ -1,4 +1,6 @@
-from domain.entities.game import Game, Player
+from domain.entities.game import Game
+from domain.entities.player import Player
+from domain.entities.hand import Hand
 from application.facades.CardInteractionFacade import CardInteractionFacade
 from domain.repositories.game_repository import GameRepository
 
@@ -31,7 +33,7 @@ class CreateGameUseCase:
         # Criar jogadores com suas cartas
         for i in range(num_players):
             player = Player(id=i)
-            player.hand = hands[i]
+            player.hand.add_cards(hands[i])
             game.add_player(player)
         
         # Salvar o jogo

@@ -65,3 +65,7 @@ class CardInteractionFacade:
 
     def add_card_to_hand(self, hand: Hand, card: Card):
         hand.add_card(card)
+
+    def get_top_card(self, pile: Pile) -> Card:
+        """Retorna a carta do topo da pilha de descarte."""
+        return pile.top_card()

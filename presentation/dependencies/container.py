@@ -8,6 +8,7 @@ from application.use_cases.get_current_player import GetCurrentPlayerUseCase
 from application.use_cases.play_card import PlayCardUseCase
 from application.use_cases.pass_turn import PassTurnUseCase
 from application.use_cases.draw_card import DrawCardUseCase
+from application.use_cases.top_card import TopCardUseCase
 
 
 class Container:
@@ -40,6 +41,11 @@ class Container:
             self.game_repository,
             self.card_facade
         )
+
+        self.top_card_use_case = TopCardUseCase(
+            self.game_repository,
+            self.card_facade
+        )
     
     def get_create_game_use_case(self) -> CreateGameUseCase:
         return self.create_game_use_case
@@ -58,6 +64,9 @@ class Container:
     
     def put_draw_card_use_case(self) -> DrawCardUseCase:
         return self.draw_card_use_case
+    
+    def get_top_card_use_case(self) -> TopCardUseCase:
+        return self.top_card_use_case
 
 
 # Instância global do container
