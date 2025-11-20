@@ -6,6 +6,7 @@ class GameStatsObserver(GameObserver):
 
     def __new__(cls):
         # Padrão Singleton para garantir que só existe UM contador na memória
+        # Implementação simples de singleton
         if cls._instance is None:
             cls._instance = super(GameStatsObserver, cls).__new__(cls)
             cls._instance.games_finished_count = 0
