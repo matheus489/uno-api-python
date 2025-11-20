@@ -61,3 +61,7 @@ class PassTurnResponse(BaseModel):
     """DTO para resposta de passar a vez"""
     message: str
 
+class DrawCardResponse(BaseModel):
+    """DTO para resposta de puxar carta"""
+    message: str
+    card: CardResponse

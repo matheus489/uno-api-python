@@ -2,11 +2,14 @@ from fastapi import APIRouter, HTTPException, Query
 from presentation.dependencies.container import container
 from presentation.dto.game_dto import (
     GameResponse, PlayerCardsResponse, CurrentPlayerResponse,
-    CardResponse, PlayCardResponse, PassTurnResponse
+    CardResponse, PlayCardResponse, PassTurnResponse, DrawCardResponse
 )
+from application.observers.GameStatsObserver import GameStatsObserver
 
 
 router = APIRouter()
+
+stats_observer = GameStatsObserver()
 
 
 @router.get("/novoJogo", response_model=GameResponse)
@@ -21,6 +24,7 @@ def criar_novo_jogo(num_jogadores: int = Query(..., description="Número de joga
         ID do jogo criado
     """
     try:
+        print(num_jogadores)
         use_case = container.get_create_game_use_case()
         game = use_case.execute(num_jogadores)
         
@@ -35,8 +39,10 @@ def criar_novo_jogo(num_jogadores: int = Query(..., description="Número de joga
         raise HTTPException(status_code=500, detail=f"Erro ao criar jogo: {str(e)}")
 
 
-@router.get("/jogo/{id_jogo}/{id_jogador}", response_model=PlayerCardsResponse)
-def ver_cartas_jogador(id_jogo: int, id_jogador: int):
+@router.get("/jogo", response_model=PlayerCardsResponse)
+def ver_cartas_jogador(
+    id_jogo: int = Query(..., description="ID do jogo"),
+    id_jogador: int = Query(..., description="ID do jogador")):
     """
     Retorna as cartas de um jogador específico.
     
@@ -62,7 +68,7 @@ def ver_cartas_jogador(id_jogo: int, id_jogador: int):
         raise HTTPException(status_code=500, detail=f"Erro ao buscar cartas: {str(e)}")
 
 
-@router.get("/jogo/{id_jogo}/jogado_da_vez", response_model=CurrentPlayerResponse)
+@router.get("/jogo/{id_jogo}/jogador_da_vez", response_model=CurrentPlayerResponse)
 def ver_jogador_da_vez(id_jogo: int):
     """
     Retorna o ID do jogador da vez.
@@ -85,7 +91,14 @@ def ver_jogador_da_vez(id_jogo: int):
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao buscar jogador da vez: {str(e)}")
+    
 
+@router.get("/stats", response_model=dict)
+def get_game_stats():
+    """
+    Retorna estatísticas do jogo.
+    """
+    return stats_observer.get_stats()
 
 @router.put("/jogo/{id_jogo}/jogar", response_model=PlayCardResponse)
 def jogar_carta(
@@ -106,8 +119,10 @@ def jogar_carta(
     """
     try:
         use_case = container.get_play_card_use_case()
+        use_case.attach_observer(stats_observer)
+
         result = use_case.execute(id_jogo, id_jogador, id_carta)
-        
+
         return PlayCardResponse(**result)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -140,3 +155,27 @@ def passar_vez(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao passar a vez: {str(e)}")
 
+@router.put("/jogo/{id_jogo}/puxar_carta", response_model=DrawCardResponse)
+def puxar_carta(
+    id_jogo: int,
+    id_jogador: int = Query(..., description="ID do jogador")
+):
+    """
+    Puxa uma carta do baralho para o jogador.
+    
+    Args:
+        id_jogo: ID do jogo
+        id_jogador: ID do jogador
+        
+    Returns:
+        Mensagem de confirmação
+    """
+    try:
+        use_case = container.put_draw_card_use_case()
+        result = use_case.execute(id_jogo, id_jogador)
+        
+        return DrawCardResponse(**result)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao puxar carta: {str(e)}")

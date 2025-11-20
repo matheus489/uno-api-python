@@ -1,27 +1,12 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 from .card import Card
+from .deck import Deck
+from .pile import Pile
+from .player import Player
 
 
-@dataclass
-class Player:
-    """Entidade Jogador"""
-    id: int
-    hand: List[Card] = field(default_factory=list)
-    
-    def add_card(self, card: Card):
-        """Adiciona uma carta à mão do jogador"""
-        self.hand.append(card)
-    
-    def remove_card(self, card_index: int) -> Optional[Card]:
-        """Remove uma carta da mão do jogador"""
-        if 0 <= card_index < len(self.hand):
-            return self.hand.pop(card_index)
-        return None
-    
-    def has_cards(self) -> bool:
-        """Verifica se o jogador ainda tem cartas"""
-        return len(self.hand) > 0
+
 
 
 @dataclass
@@ -30,8 +15,8 @@ class Game:
     id: int
     players: List[Player] = field(default_factory=list)
     current_player: int = 0
-    deck: List[Card] = field(default_factory=list)
-    pile: List[Card] = field(default_factory=list)
+    deck: Deck = field(default_factory=Deck)
+    discard_pile: Pile = field(default_factory=Pile)
     is_finished: bool = False
     winner_id: Optional[int] = None
     

@@ -23,11 +23,11 @@ class CardValue(str, Enum):
     SEVEN = "7"
     EIGHT = "8"
     NINE = "9"
-    SKIP = "pular"
-    REVERSE = "reverter"
-    DRAW_TWO = "+2"
-    WILD = "coringa"
-    WILD_DRAW_FOUR = "+4"
+    # SKIP = "pular"
+    # REVERSE = "reverter"
+    # DRAW_TWO = "+2"
+    # WILD = "coringa"
+    # WILD_DRAW_FOUR = "+4"
 
 
 @dataclass

@@ -1,13 +1,26 @@
+from typing import List
+from application.observers.GameObserver import GameObserver
 from domain.entities.game import Game
-from domain.entities.card import Card
+from application.facades.CardInteractionFacade import CardInteractionFacade
 from domain.repositories.game_repository import GameRepository
 
 
 class PlayCardUseCase:
     """Caso de uso: Jogar uma carta"""
     
-    def __init__(self, game_repository: GameRepository):
+    def __init__(self, game_repository: GameRepository, card_facade: CardInteractionFacade):
         self.game_repository = game_repository
+        self.card_facade = card_facade
+        self.observers: List[GameObserver] = []
+
+    def attach_observer(self, observer: GameObserver):
+        """Anexa um observador ao caso de uso"""
+        self.observers.append(observer)
+
+    def notify_observers(self, game: Game):
+        """Notifica todos os observadores sobre uma mudança no jogo"""
+        for observer in self.observers:
+            observer.update(game)
     
     def execute(self, game_id: int, player_id: int, card_index: int) -> dict:
         """Joga uma carta de um jogador"""
@@ -32,18 +45,18 @@ class PlayCardUseCase:
         if card_index < 0 or card_index >= len(player.hand):
             raise ValueError(f"Índice de carta inválido: {card_index}")
         
-        card_to_play = player.hand[card_index]
+        card_to_play = player.hand.get_card(card_index)
         top_card = game.get_top_card()
         
         # Verificar se a carta pode ser jogada
-        if not card_to_play.can_play_on(top_card):
+        if not self.card_facade.validate_move(card_to_play, top_card):
             raise ValueError(f"A carta não pode ser jogada. Carta do topo: {top_card}, Carta escolhida: {card_to_play}")
         
         # Remover carta da mão do jogador
-        player.remove_card(card_index)
+        player.hand.remove_card(card_index)
         
         # Adicionar carta à pilha
-        game.play_card(card_to_play)
+        self.card_facade.play_card(card_to_play, game.discard_pile)
         
         # Verificar se o jogador ganhou
         if not player.has_cards():
