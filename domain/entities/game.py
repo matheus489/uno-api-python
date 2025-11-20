@@ -19,6 +19,10 @@ class Game:
     discard_pile: Pile = field(default_factory=Pile)
     is_finished: bool = False
     winner_id: Optional[int] = None
+    direction: int = 1
+
+    def reverse_direction(self):
+        self.direction *= -1
     
     def add_player(self, player: Player):
         """Adiciona um jogador ao jogo"""
@@ -33,7 +37,8 @@ class Game:
     def next_player(self):
         """Passa para o próximo jogador"""
         if not self.is_finished:
-            self.current_player = (self.current_player + 1) % len(self.players)
+            total_players = len(self.players)
+            self.current_player = (self.current_player + self.direction) % total_players
     
     def play_card(self, card: Card):
         """Adiciona uma carta à pilha"""

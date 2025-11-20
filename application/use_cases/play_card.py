@@ -3,14 +3,15 @@ from application.observers.GameObserver import GameObserver
 from domain.entities.game import Game
 from application.facades.CardInteractionFacade import CardInteractionFacade
 from domain.repositories.game_repository import GameRepository
-
+from application.factories.effect_strategy_factory import EffectStrategyFactory
 
 class PlayCardUseCase:
     """Caso de uso: Jogar uma carta"""
     
-    def __init__(self, game_repository: GameRepository, card_facade: CardInteractionFacade):
+    def __init__(self, game_repository: GameRepository, card_facade: CardInteractionFacade, effect_strategy_factory: EffectStrategyFactory):
         self.game_repository = game_repository
         self.card_facade = card_facade
+        self.effect_strategy_factory = effect_strategy_factory
         self.observers: List[GameObserver] = []
 
     def attach_observer(self, observer: GameObserver):
@@ -65,8 +66,10 @@ class PlayCardUseCase:
             self.game_repository.update(game)
             return {"message": "Você ganhou o jogo!", "won": True}
         
-        # Passar para o próximo jogador
-        game.next_player()
+        strategy = self.effect_strategy_factory.get_strategy(card_to_play.value)
+
+        strategy.apply(game, self.card_facade)
+        
         self.game_repository.update(game)
         
         return {"message": "Carta jogada com sucesso", "won": False}

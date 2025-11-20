@@ -9,6 +9,7 @@ from application.use_cases.play_card import PlayCardUseCase
 from application.use_cases.pass_turn import PassTurnUseCase
 from application.use_cases.draw_card import DrawCardUseCase
 from application.use_cases.top_card import TopCardUseCase
+from application.factories.effect_strategy_factory import EffectStrategyFactory
 
 
 class Container:
@@ -19,6 +20,7 @@ class Container:
         self.game_repository = InMemoryGameRepository()
         self.card_facade = CardInteractionFacade()
         self.stats_observer = GameStatsObserver()
+        self.effect_strategy_factory = EffectStrategyFactory()
         
         # Casos de uso
         self.create_game_use_case = CreateGameUseCase(
@@ -32,7 +34,8 @@ class Container:
 
         self.play_card_use_case = PlayCardUseCase(
             self.game_repository,
-            self.card_facade
+            self.card_facade,
+            self.effect_strategy_factory
         )
 
         self.pass_turn_use_case = PassTurnUseCase(self.game_repository)

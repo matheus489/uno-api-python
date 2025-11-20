@@ -8,7 +8,7 @@ class CardColor(str, Enum):
     BLUE = "azul"
     GREEN = "verde"
     YELLOW = "amarelo"
-    WILD = "coringa"
+    # WILD = "coringa"
 
 
 class CardValue(str, Enum):
@@ -23,9 +23,9 @@ class CardValue(str, Enum):
     SEVEN = "7"
     EIGHT = "8"
     NINE = "9"
-    # SKIP = "pular"
-    # REVERSE = "reverter"
-    # DRAW_TWO = "+2"
+    SKIP = "pular"
+    REVERSE = "reverter"
+    DRAW_TWO = "+2"
     # WILD = "coringa"
     # WILD_DRAW_FOUR = "+4"
 

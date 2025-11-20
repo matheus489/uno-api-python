@@ -28,11 +28,11 @@ class Deck:
                 card_id += 1
             
             # # Duas cartas de cada ação
-            # for value in [CardValue.SKIP, CardValue.REVERSE, CardValue.DRAW_TWO]:
-            #     deck.append(Card(id=card_id, color=color, value=value))
-            #     card_id += 1
-            #     deck.append(Card(id=card_id, color=color, value=value))
-            #     card_id += 1
+            for value in [CardValue.SKIP, CardValue.REVERSE, CardValue.DRAW_TWO]:
+                self.cards.append(Card(id=card_id, color=color, value=value))
+                card_id += 1
+                self.cards.append(Card(id=card_id, color=color, value=value))
+                card_id += 1
         
         # # Cartas coringa
         # for _ in range(4):
