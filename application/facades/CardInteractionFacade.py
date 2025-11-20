@@ -34,7 +34,7 @@ class CardInteractionFacade:
         """
         if deck.is_empty():
             # Lógica de 'reshuffle': Pega o descarte (menos a topo), embaralha e vira novo deck
-            top_card = pile.top_card()
+            top_card = pile.pop_top_card()
             cards_to_recycle = pile.remove_all()
             deck.add_cards(cards_to_recycle)
             deck.shuffle()
@@ -68,4 +68,4 @@ class CardInteractionFacade:
 
     def get_top_card(self, pile: Pile) -> Card:
         """Retorna a carta do topo da pilha de descarte."""
-        return pile.top_card()
+        return pile.get_top_card()

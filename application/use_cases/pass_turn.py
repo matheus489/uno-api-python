@@ -30,9 +30,9 @@ class PassTurnUseCase:
         
         # Adicionar uma carta do baralho à mão do jogador
         if game.deck:
-            card = game.deck.pop()
-            player.add_card(card)
-        
+            card = game.deck.draw()
+            player.hand.add_card(card)
+            
         # Passar para o próximo jogador
         game.next_player()
         self.game_repository.update(game)

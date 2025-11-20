@@ -172,9 +172,19 @@ def puxar_carta(
     """
     try:
         use_case = container.put_draw_card_use_case()
-        result = use_case.execute(id_jogo, id_jogador)
+        drawn_card = use_case.execute(id_jogo, id_jogador)
         
-        return DrawCardResponse(**result)
+        card_dto = CardResponse(
+            id=drawn_card.id,
+            color=drawn_card.color.value,
+            value=drawn_card.value.value
+        )
+
+        return DrawCardResponse(
+            message=f"Jogador {id_jogador} puxou uma carta com sucesso.",
+            card=card_dto
+        )
+        
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:

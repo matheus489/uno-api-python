@@ -15,9 +15,14 @@ class Pile:
     def is_empty(self) -> bool:
         return len(self.cards) == 0
     
-    def top_card(self) -> Card:
+    def pop_top_card(self) -> Card:
         if not self.is_empty():
             return self.cards.pop()
+        
+    def get_top_card(self) -> Card:
+        if not self.is_empty():
+            return self.cards[-1]
+        return None
         
     def remove_all(self) -> List[Card]:
         removed_cards = self.cards[:]

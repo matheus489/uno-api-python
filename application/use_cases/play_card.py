@@ -59,7 +59,7 @@ class PlayCardUseCase:
         self.card_facade.play_card(card_to_play, game.discard_pile)
         
         # Verificar se o jogador ganhou
-        if not player.has_cards():
+        if player.hand.is_empty():
             game.is_finished = True
             game.winner_id = player_id
             self.game_repository.update(game)
