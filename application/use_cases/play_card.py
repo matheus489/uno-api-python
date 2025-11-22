@@ -64,6 +64,7 @@ class PlayCardUseCase:
             game.is_finished = True
             game.winner_id = player_id
             self.game_repository.update(game)
+            self.notify_observers(game)
             return {"message": "Você ganhou o jogo!", "won": True}
         
         strategy = self.effect_strategy_factory.get_strategy(card_to_play.value)

@@ -42,7 +42,6 @@ class Card:
     
     def can_play_on(self, other_card: 'Card') -> bool:
         """Verifica se esta carta pode ser jogada sobre outra carta"""
-        if self.color == CardColor.WILD or other_card.color == CardColor.WILD:
-            return True
+        # Mesma cor ou mesmo valor
         return self.color == other_card.color or self.value == other_card.value
 

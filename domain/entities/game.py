@@ -42,5 +42,5 @@ class Game:
     
     def play_card(self, card: Card):
         """Adiciona uma carta à pilha"""
-        self.pile.append(card)
+        self.discard_pile.add_card(card)
 

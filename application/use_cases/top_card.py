@@ -9,8 +9,8 @@ class TopCardUseCase:
 
     def execute(self, game_id: int) -> Card:
         game = self.game_repository.find_by_id(game_id)
-        top_card = self.card_facade.get_top_card(game.discard_pile)
         if not game:
             raise ValueError("Jogo não encontrado")
-
+        
+        top_card = self.card_facade.get_top_card(game.discard_pile)
         return top_card
